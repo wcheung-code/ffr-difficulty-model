@@ -14,7 +14,7 @@ if __name__ == '__main__':
 
     api_key = os.getenv("API_KEY")
     raw_data_folder = os.getenv("RAW_DATA_FOLDER")
-
+    os.makedirs(raw_data_folder, exist_ok = True) 
     FFR_API_URL = f'https://www.flashflashrevolution.com/api/api.php?key={api_key}&action={{}}'
 
     chart_preprocessor = ChartPreprocessor()
@@ -23,7 +23,7 @@ if __name__ == '__main__':
     response = {song['id']: dict((k, song[k]) 
         for k in ('name', 'difficulty')) for song in song_list}
 
-    for i, (id, info) in enumerate(response.items()):
+    for i, (id, info) in enumerate(response.items()):        
         chart = r.get(FFR_API_URL.format(f'chart&level={id}')).json()
         info['chart'] = chart_preprocessor.preprocess(chart)
         data_serializer.download(info, id)
